@@ -1,0 +1,8 @@
+---
+# ./vars/name_vars.yml
+
+vm1: ciswin007
+vm2: iptwin008
+vm3: secwin009
+vm4: itlinx101
+vm5: sdesklinx201

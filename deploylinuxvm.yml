@@ -1,0 +1,51 @@
+---
+- name: Create Azure Linux VM
+  hosts: localhost
+  connection: local
+  vars_prompt:
+    - name: password
+      prompt: "Enter local administrator password"
+
+  tasks:
+ 
+  - include_vars: namevars.yml
+  
+  - name: Create public IP address
+    azure_rm_publicipaddress:
+      resource_group: ansiblerg
+      allocation_method: Static
+      name: "pip_{{ vm3 }}"
+    register: output_ip_address
+
+  - name: Output public IP
+    debug:
+      msg: "The public IP is {{ output_ip_address.state.ip_address }}"
+  
+  - name: Create a network interface
+    azure_rm_networkinterface:
+      name: "nic_{{ vm3 }}"
+      resource_group: ansiblerg
+      virtual_network: ansible-vnet
+      subnet_name: subnet
+      security_group: networkSecurityGroup
+      ip_configurations:
+        - name: default
+          public_ip_address_name: "pip_{{ vm3 }}"
+          primary: True
+
+  - name: Create Linux VM
+    azure_rm_virtualmachine:
+      resource_group: ansiblerg
+      name: "{{ vm3 }}"
+      vm_size: Standard_DS1_v2
+      managed_disk_type: Standard_LRS
+      admin_username: asharsidd
+      admin_password: "{{ password }}"
+      network_interfaces: "nic_{{ vm3 }}"
+      os_type: Linux
+      image:
+        offer: CentOS
+        publisher: OpenLogic
+        sku: '7.5'
+        version: latest
+    no_log: false
