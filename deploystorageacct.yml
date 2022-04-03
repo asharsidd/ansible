@@ -1,0 +1,48 @@
+---
+- name: Create Storage account
+  hosts: localhost
+  connection: local
+  vars_prompt:
+    - name: password
+      prompt: "Enter local administrator password"
+  
+  tasks:
+
+  - name: Create resource group
+    azure_rm_resourcegroup:
+      name: ansiblesto444
+      location: eastus
+
+  - name: create Storage account
+    azure_rm_storageaccount:
+      resource_group: ansiblesto444
+      name: stoansible007
+      kind: Storage
+      location: eastus
+      type: Standard_LRS
+    register: rg
+  - debug:
+      var: rg    
+
+  - name: create BlobStorage account
+    azure_rm_storageaccount:
+      resource_group: ansiblesto444
+      name: stoansible008
+      access_tier: Hot
+      kind: BlobStorage
+      location: eastus
+      type: Standard_GRS
+    register: rg
+  - debug:
+      var: rg
+
+  - name: create Storage account
+    azure_rm_storageaccount:
+      resource_group: ansiblesto444
+      name: stoansible009
+      kind: Storage
+      location: westus
+      type: Standard_ZRS
+    register: rg
+  - debug:
+      var: rg
