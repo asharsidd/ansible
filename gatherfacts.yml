@@ -1,0 +1,9 @@
+---
+- name: this playbook creates a file and directory
+  hosts: all 
+  gather_facts: no 
+  tasks:
+  - name: Creating a file
+    file: 
+      path: /home/ash/code1
+      state: directory
