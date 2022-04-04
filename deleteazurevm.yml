@@ -1,0 +1,37 @@
+---
+# delete the Virtual machine by passing the name of VM as --extra-vars "vm=secwin009"
+
+- name: Delete Azure VM
+  hosts: localhost
+  connection: local
+
+  tasks:
+
+  - include_vars: namevars.yml
+
+  - name: Deleting the Virtual Machine - "{{ vm }}"
+    azure_rm_virtualmachine:
+      name: "{{ vm }}"
+      resource_group: ansiblerg
+      state: absent
+    register: vm 
+  - debug:
+      var: vm
+
+  - name: Deleting network interface - "nic_{{ vm }}"
+    azure_rm_networkinterface:
+      name: "nic_{{ vm }}"
+      resource_group: ansiblerg
+      state: absent
+    register: vnet 
+  - debug:
+      var: vnet
+
+  - name: Deleting Public IP - "pip_{{ vm }}"
+    azure_rm_publicipaddress:
+      name: "pip_{{ vm }}"
+      resource_group: ansiblerg
+      state: absent
+    register: pip
+  - debug:
+      var: pip
