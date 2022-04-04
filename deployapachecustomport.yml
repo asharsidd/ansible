@@ -1,6 +1,10 @@
 ---
 # tasks file for setup-apache
+- name: This playbook will insall httpd/apache on custom port
+  hosts: all
+  become: True
 - include_vars: namevars.yml
+
 - name: install package
   yum:
     name: httpd
